@@ -15,3 +15,4 @@ import bookingRoutes from './bookingRoutes';
 // Lägg till routes
 app.use('/api/experiences', experienceRoutes);
 app.use('/api/bookings', bookingRoutes);
+// Boule booking API routes configured
