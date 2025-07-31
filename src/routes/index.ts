@@ -9,3 +9,9 @@ router.get('/health', (req, res) => {
 });
 
 export default router;
+import experienceRoutes from './experienceRoutes';
+import bookingRoutes from './bookingRoutes';
+
+// Lägg till routes
+app.use('/api/experiences', experienceRoutes);
+app.use('/api/bookings', bookingRoutes);
