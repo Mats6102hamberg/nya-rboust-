@@ -17,3 +17,90 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+model Experience {
+  id          Int       @id @default(autoincrement())
+  name        String    // "Klassisk Vin & Boule", "Craft Beer & Boule", etc.
+  description String
+  price       Int       // Pris i kronor
+  duration    Int       // Längd i timmar
+  maxSpots    Int       // Max antal deltagare
+  type        String    // "vin", "öl", "te"
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  availableDates AvailableDate[]
+  bookings       Booking[]
+}
+
+model AvailableDate {
+  id           Int       @id @default(autoincrement())
+  experienceId Int
+  date         DateTime
+  startTime    String    // "10:00"
+  endTime      String    // "16:00"
+  bookedSpots  Int       @default(0)
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  
+  // Relations
+  experience   Experience @relation(fields: [experienceId], references: [id])
+  bookings     Booking[]
+}
+
+model Customer {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  phone     String?
+  createdAt DateTime  @default(now())
+  
+  // Relations
+  bookings  Booking[]
+}
+
+model Booking {
+  id               Int           @id @default(autoincrement())
+  customerId       Int
+  experienceId     Int
+  availableDateId  Int
+  numberOfGuests   Int           @default(1)
+  totalPrice       Int
+  status           String        @default("pending") // "pending", "confirmed", "cancelled"
+  paymentStatus    String        @default("unpaid")  // "unpaid", "paid", "refunded"
+  specialRequests  String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  
+  // Relations
+  customer         Customer      @relation(fields: [customerId], references: [id])
+  experience       Experience    @relation(fields: [experienceId], references: [id])
+  availableDate    AvailableDate @relation(fields: [availableDateId], references: [id])
+}
+model Customer {
+  id        Int       @id @default(autoincrement())
+  name      String
+  email     String    @unique
+  phone     String?
+  createdAt DateTime  @default(now())
+  
+  bookings  Booking[]
+}
+
+model Booking {
+  id               Int           @id @default(autoincrement())
+  customerId       Int
+  experienceId     Int
+  availableDateId  Int
+  numberOfGuests   Int           @default(1)
+  totalPrice       Int
+  status           String        @default("pending")
+  paymentStatus    String        @default("unpaid")
+  specialRequests  String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  
+  customer         Customer      @relation(fields: [customerId], references: [id])
+  experience       Experience    @relation(fields: [experienceId], references: [id])
+  availableDate    AvailableDate @relation(fields: [availableDateId], references: [id])
+}
